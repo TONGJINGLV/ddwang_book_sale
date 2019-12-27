@@ -1,2 +1,3 @@
 # ddwang_book_sale
-* This is a repo for the project in Database System Class shared by a group of five.
+* 用户和书店面对的登录与搜索网页，详见UI设计
+* 嵌入django

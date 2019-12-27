@@ -1,2 +1,3 @@
 # ddwang_book_sale
-* This is a repo for the project in Database System Class shared by a group of five.
+* 书店处理客户订单和退货的网页
+* 嵌入django
