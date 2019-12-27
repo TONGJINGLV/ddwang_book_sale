@@ -1,0 +1,109 @@
+create database ddwang;
+use ddwang;
+
+create table supplier(
+sid int auto_increment,#auto_increment的用法可以百度一下
+sname varchar(255),
+stel char(8) not null,
+scity varchar(31),
+sregtime datetime not null, # datatime的格式是"year-month-day hour:minute:second
+primary key(sid)
+);
+
+create table bookstore(
+bsid int auto_increment,
+bsname varchar(255),
+bstel char(8) not null,
+bscity varchar(31),
+bsregtime datetime not null,
+primary key(bsid)
+);
+
+create table customer(
+cid int auto_increment,#auto_increment的用法可以百度一下
+cname varchar(255),
+ctel char(11) not null,
+cregtime datetime not null,
+primary key(cid)
+);
+
+create table book(
+bid int auto_increment,
+btitle varchar(255) not null,
+bauthor varchar(1023),
+bedition varchar(1023),
+bformat varchar(127),
+bpages int,
+brating float,
+bratcount int,
+brevcount int,
+bgenres varchar(1023),
+primary key(bid)
+);
+
+# when you load data, remember to change your own path
+load data infile '/var/lib/mysql-files/supplier.csv' into table supplier fields terminated by ','( sname, stel, scity, sregtime ) set sid=null;
+load data infile '/var/lib/mysql-files/bookstore.csv' into table bookstore fields terminated by ','( bsname, bstel, bscity, bsregtime ) set bsid=null;
+load data infile '/var/lib/mysql-files/user.csv' into table customer fields terminated by ','( cname, ctel, cregtime ) set cid=null;
+load data infile '/var/lib/mysql-files/book.csv' into table book fields terminated by '`'( btitle, bauthor, bedition, bformat, @bpages,brating, bratcount,brevcount,bgenres) set bid=null,bpages=if(@bpages='',null,@bpages);
+
+# 调bug调到哭，order作为表名和mysql关键字冲突，换成Order_
+create table Order_(
+oid int auto_increment,
+order_time datetime not null,
+store_id int not null,
+customer_id int not null,
+order_amount float not null, # 交易金额
+order_type bool not null, # 0表示购买订单，1表示退货订单
+order_closetime datetime, # 初始null，确认时update
+primary key(oid),
+foreign key(store_id) references bookstore (bsid),
+foreign key(customer_id) references customer (cid)
+);
+
+
+create table OrderDetail(
+odtid int auto_increment,
+order_id int not null,
+book_id int not null,
+quantity int not null,
+primary key(odtid),
+foreign key(order_id) references Order_ (oid),
+foreign key(book_id) references book (bid)
+);
+
+create table PurchaseOrder(
+poid int auto_increment,
+porder_time datetime not null,
+store_id int not null,
+supplier_id int not null,
+porder_amount float not null, # 交易金额
+porder_type bool not null, # 0表示购买订单，1表示退货订单
+porder_closetime datetime, # 初始null，确认时update
+primary key(poid),
+foreign key(store_id) references bookstore (bsid),
+foreign key(supplier_id) references supplier (sid)
+);
+
+create table PurchaseOrderDetail(
+podtid int auto_increment,
+porder_id int not null,
+book_id int not null,
+quantity int not null,
+primary key(podtid),
+foreign key(porder_id) references PurchaseOrder (poid),
+foreign key(book_id) references book (bid)
+);
+
+create table Stock(
+book_id int not null,
+store_id int not null,
+stock_quantity int not null,
+price float not null,
+foreign key(book_id) references book (bid),
+foreign key(store_id) references bookstore (bsid)
+);
+
+
+
+
