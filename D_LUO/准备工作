@@ -1,0 +1,26 @@
+# 数据库系统概论大作业
+## 所需软件及包库安装确认
+1. django: running the following command in a shell prompt:
+```
+python -m django --version
+```
+If Django is installed, you should see the version of your installation. If it isn’t, you’ll get an error telling “No module named django”, and please [install django](https://docs.djangoproject.com/en/3.0/intro/install/)
+
+2. MySQL: [install instruction](https://www.runoob.com/mysql/mysql-install.html)
+
+3. mysqlclient: running the following command in a shell prompt:
+```
+python -m mysqlclient --version
+```
+If mysqlclient is installed, you should see the version of your installation. If it isn’t, you’ll get an error telling “No module named mysqlclient”, and please running the following command:
+```
+pip install mysqlclient
+```
+
+## 运行服务器
+run the following commands:
+```
+py manage.py runserver
+```
+## 使用服务
+Starting development server at http://127.0.0.1:8000/bookstore/
