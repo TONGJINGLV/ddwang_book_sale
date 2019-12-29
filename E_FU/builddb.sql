@@ -140,3 +140,6 @@ create table PurchaseOrderDetail(
 	foreign key(porder_id) references PurchaseOrder (poid),
 	foreign key(book_id) references book (bid)
 );
+
+--新增Order_表的address列--
+alter table Order_ add column address varchar(255) not null;
