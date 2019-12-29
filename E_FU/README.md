@@ -1,5 +1,13 @@
 # ddwang_book_sale
 
+## version2:
+
+**更新时间**：2019-12-29 20:25:00
+
+**更新内容**：
+
+1. builddb.sql中新增Order_表的address字段。
+
 ## version1：
 
 **更新时间**：2019-12-28 13:00:00
