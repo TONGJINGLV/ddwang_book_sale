@@ -32,3 +32,5 @@ py manage.py runserver
 * Please log in with username "admin" and password "r00tpassw0rd"
 
 ## 逻辑结构设计：请阅读 /bookstore/models.py代码及注释
+## 给前端在事务处理上的建议
+* 把view操作打包成一个个事务，利用django的事务并行调度来提高可用性：https://docs.djangoproject.com/en/3.0/ref/settings/#atomic-requests
