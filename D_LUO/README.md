@@ -32,5 +32,11 @@ py manage.py runserver
 * Please log in with username "admin" and password "r00tpassw0rd"
 
 ## 逻辑结构设计：请阅读 /bookstore/models.py代码及注释
+## 数据生成指南：
+* 基本信息录入：先录入book（此时库存只能为默认的0）, supplier, customer, bookstore的数据；
+* 进货：录入purchaseorder的数据，使得这些书目库存非0；
+* 上架：在book表中修改on_sale，使书籍上架；
+* 下单：此时前端client可正常下单；
+* 发货：回到admin修改sendtime.
 ## 给前端在事务处理上的建议
 * 把view操作打包成一个个事务，利用django的事务并行调度来提高可用性：https://docs.djangoproject.com/en/3.0/ref/settings/#atomic-requests
