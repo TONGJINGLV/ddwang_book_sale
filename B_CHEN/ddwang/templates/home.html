@@ -9,41 +9,26 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <!--link href="{% static 'login/css/login.css' %}" rel="stylesheet"/-->
-    <title>首页</title>
+    <title>home</title>
   </head>
   <body>
     <div class="container">
-
-        <form action={% url 'search' %} method="get">
-                <div class="input-group col-md-3" style="margin-right:20px">
+                <form action="search.html" method="get">
+                    <div class="input-group col-md-3" style="margin-right:20px">
                     <input type="text" class="form-control"placeholder="请输入书名" name="bookname">
                         <span class="input-group-btn">
                             <button class="btn btn-info btn-search" type="submit">搜索</button>
                         </span>
-                </div>
-        </form>
+                    </div>
+                </form>
+
                 <div>
-                    <a href="/login/" class="text-success" style="margin-right:20px"><ins>登入</ins></a>
+                <a href="/logout/" class="text-success" style="margin-right:20px"><ins>登出</ins></a>
+                </div>
+                <div>
+                    <a href="/cart/"class="text-success " ><ins>购物车</ins></a>
                 </div>
     </div> <!-- /container -->
-
-    {% block content %}
-
-    {% if book_list %}
-    <ul>
-
-      {% for book in book_list %}
-      <li>
-        <a href="{% url 'book_detail' book_id=book.book_id %}">{{ book.title }}</a>
-          {{book.author}}
-      </li>
-      {% endfor %}
-
-    </ul>
-    {% else %}
-      <p>There are no books in the library.</p>
-    {% endif %}
-    {% endblock %}
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

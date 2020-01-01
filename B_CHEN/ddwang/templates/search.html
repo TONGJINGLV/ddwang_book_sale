@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>搜索</title>
+    </head>
+    <body>
+    <br/>
+
+    {% if request.GET.q != '' %}
+        {% if results %}
+        <h1>Results</h1>
+        <br/><br/>
+        {% for result in results %}
+            {{result.title}}
+            <a href="{% url 'addtocart' book_id=result.book_id %}">加入购物车</a>
+        <br/>
+        {% endfor %}
+        {% else %}
+        Can't find this book.
+        {% endif %}
+    {% endif %}
+    </body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>detail</title>
+</head>
+<body>
+    {% block content %}
+
+    {% if cur_book %}
+    <ul>
+
+      <li>
+            {{ cur_book.title }}
+            {{ cur_book.author }}
+            {{ cur_book.price }}
+            {{ cur_book.pages }}
+      </li>
+
+    </ul>
+    {% else %}
+      <p>There is no such book.</p>
+    {% endif %}
+    {% endblock %}
+
+    <div class="input-group col-md-3" style="margin-right:20px">
+        <input type="submit" name="add_cart" value="加入购物车">
+    </div>
+
+</body>
