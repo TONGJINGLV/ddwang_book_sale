@@ -1,0 +1,56 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- 上述meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!--link href="{% static 'login/css/login.css' %}" rel="stylesheet"/-->
+    <title>首页</title>
+  </head>
+  <body>
+    <div class="container">
+
+        <form action={% url 'search' %} method="get">
+                <div class="input-group col-md-3" style="margin-right:20px">
+                    <input type="text" class="form-control"placeholder="请输入书名" name="bookname">
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search" type="submit">搜索</button>
+                        </span>
+                </div>
+        </form>
+                <div>
+                    <a href="/login/" class="text-success" style="margin-right:20px"><ins>登入</ins></a>
+                </div>
+    </div> <!-- /container -->
+
+    {% block content %}
+
+    {% if book_list %}
+    <ul>
+
+      {% for book in book_list %}
+      <li>
+        <a href="{% url 'book_detail' book_id=book.book_id %}">{{ book.title }}</a>
+          {{book.author}}
+      </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+    {% endblock %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    {#    以下三者的引用顺序是固定的#}
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
