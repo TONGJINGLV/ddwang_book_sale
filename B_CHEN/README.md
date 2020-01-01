@@ -7,23 +7,23 @@
 
   显示搜索框，登入键和所有书的书名和作者，点击书名进入该书详情页
 
-![image-20200101204439593](C:\Users\cx\AppData\Roaming\Typora\typora-user-images\image-20200101204439593.png)
+![image](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/B_CHEN/images/image-20200101204439593.png)
 
 ## 登录页面
 
-![image-20200101204704913](C:\Users\cx\AppData\Roaming\Typora\typora-user-images\image-20200101204704913.png)
+![image](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/B_CHEN/images/image-20200101204704913.png)
 
 ## 注册页面
 
-![image-20200101204758295](C:\Users\cx\AppData\Roaming\Typora\typora-user-images\image-20200101204758295.png)
+![image](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/B_CHEN/images/image-20200101204758295.png)
 
 ## 修改密码页面
 
-![image-20200101204833066](C:\Users\cx\AppData\Roaming\Typora\typora-user-images\image-20200101204833066.png)
+![image-20200101204833066](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/B_CHEN/images/image-20200101204833066.png)
 
 ## 登录后页面
 
-![image-20200101204909445](C:\Users\cx\AppData\Roaming\Typora\typora-user-images\image-20200101204909445.png)
+![image-20200101204909445](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/B_CHEN/images/image-20200101204909445.png)
 
 ## 购物车页面
 
@@ -31,11 +31,11 @@
 
 ## 搜索结果页面
 
-![image-20200101205021960](C:\Users\cx\AppData\Roaming\Typora\typora-user-images\image-20200101205021960.png)
+![image-20200101205021960](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/B_CHEN/images/image-20200101205021960.png)
 
 ## 加入购物车
 
-![image-20200101205049278](C:\Users\cx\AppData\Roaming\Typora\typora-user-images\image-20200101205049278.png)
+![image-20200101205049278](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/B_CHEN/images/image-20200101205049278.png)
 
 ## 问题
 
@@ -83,4 +83,4 @@ if cur_book.book_id not in cart.keys():
 
 usession如下：
 
-![image-20200101205516944](C:\Users\cx\AppData\Roaming\Typora\typora-user-images\image-20200101205516944.png)
+![image-20200101205516944](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/B_CHEN/images/image-20200101205516944.png)
