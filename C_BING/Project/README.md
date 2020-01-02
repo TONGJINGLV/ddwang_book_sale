@@ -28,6 +28,7 @@ py manage.py runserver
 * 书店店主界面： http://127.0.0.1:8000/admin/
 * Please log in with username "admin" and password "r00tpassw0rd"
 * 用户购物车界面： http://127.0.0.1:8000/client/cart/
+* B部分还没有添加进来，所以缺少物品选购界面，后续会在用户界面上添加一个返回按钮用于返回物品选购页面 
 * 同时打开两个界面，开始模拟电商购物流程：  
 <div align=center><img height="350" src="https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/pages.png" /></div>  
 1. 在用户购物车界面点击结算，进入用户信息收集页面，填入用户信息（联系电话应为11位数）：  
@@ -51,4 +52,4 @@ py manage.py runserver
 <div align=center><img height="100" src="https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/closetime.png" /></div>  
 11. 点击最下方save，保存，发现此时23号订单状态由“goods on the way”变为“closed”.  
 12. 回到用户界面上刷新页面，订单状态也变为“closed”，流程结束。  
-* B部分还没有添加进来，所以缺少物品选购界面，后续会在用户界面上添加一个返回按钮用于返回物品选购页面 
+
