@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <title>Title</title>
+</head>
+<body>
+    <h2>{{ heading }}</h2>
+    <form action="/client/info-post/" method="post">
+        {% csrf_token %}
+        联系电话<input type="text" name="tel"><br>
+        收货地址<input type="text" name="address"><br>
+        <input type="submit" value="Submit">
+    </form>
+    <div>{{ content|safe }}</div>
+</body>
+</html>

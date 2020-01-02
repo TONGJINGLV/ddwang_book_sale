@@ -1,241 +1,219 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.core.validators import MinValueValidator
 
-
-class AuthGroup(models.Model):
-    name = models.CharField(unique=True, max_length=150)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group'
-
-
-class AuthGroupPermissions(models.Model):
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group_permissions'
-        unique_together = (('group', 'permission'),)
-
-
-class AuthPermission(models.Model):
-    name = models.CharField(max_length=255)
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
-    codename = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_permission'
-        unique_together = (('content_type', 'codename'),)
-
-
-class AuthUser(models.Model):
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.IntegerField()
-    username = models.CharField(unique=True, max_length=150)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=150)
-    email = models.CharField(max_length=254)
-    is_staff = models.IntegerField()
-    is_active = models.IntegerField()
-    date_joined = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user'
-
-
-class AuthUserGroups(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_groups'
-        unique_together = (('user', 'group'),)
-
-
-class AuthUserUserPermissions(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_user_permissions'
-        unique_together = (('user', 'permission'),)
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 
 class Book(models.Model):
-    bid = models.AutoField(primary_key=True)
-    btitle = models.CharField(max_length=255)
-    bauthor = models.CharField(max_length=1023, blank=True, null=True)
-    bedition = models.CharField(max_length=1023, blank=True, null=True)
-    bformat = models.CharField(max_length=127, blank=True, null=True)
-    bpages = models.IntegerField(blank=True, null=True)
-    brating = models.FloatField(blank=True, null=True)
-    bratcount = models.IntegerField(blank=True, null=True)
-    brevcount = models.IntegerField(blank=True, null=True)
-    bgenres = models.CharField(max_length=1023, blank=True, null=True)
+    book_id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=255)  # 书名，不能为空
+    author = models.CharField(max_length=1023, blank=True, null=True)  # 作者
+    edition = models.CharField(max_length=1023, blank=True, null=True)  # 出版社
+    format = models.CharField(max_length=127, blank=True, null=True)  # 版式，hardcover, etc.
+    pages = models.IntegerField(blank=True, null=True)  # 页数
+    score = models.FloatField('average score', blank=True, null=True)  # 评分
+    score_num = models.IntegerField('the number of readers who scored', blank=True, null=True)  # 评分人数
+    comment_num = models.IntegerField('the number of readers who comment', blank=True, null=True)  # 评论人数
+    genres = models.CharField(max_length=1023, blank=True, null=True)  # 标签，类别
+    stock = models.PositiveIntegerField(default=0)  # 库存量，默认初始时为0，如果没有相应进货单无法直接设置为非0
+    price = models.FloatField(default=0,
+                              validators=[MinValueValidator(0, 'the price should not below zero.')])  # 销售价
+    on_sale = models.CharField('on sale or not',
+                               max_length=1,
+                               choices=[('Y', 'on sale'), ('N', 'not sale')],
+                               default='N')  # 是否上架，只能取'Y' OR 'N'，默认值为‘N’
 
-    class Meta:
-        managed = False
-        db_table = 'book'
+    def clean(self):
+        # The stock should be consistent with records in all kinds of orders.
+        # 自动运行检查：当前库存量是否与历史进货量和出货量的计算结果相符，否则报错
+        # At first the stock could only be zero if there are not any related orders.
+        result = 0
+        for delta in self.orderdetail_set.all():
+            if delta.order.type == 'Y':
+                result -= delta.quantity
+            elif delta.order.type == 'N' and delta.order.closetime:
+                result += delta.quantity
+        for delta in self.purchaseorderdetail_set.all():
+            result += delta.quantity
+        if int(result) != int(self.stock):
+            raise ValidationError(_('the stock is not consistent with records in orders.'))
+
+        # the books on sale should have stock above zero
+        # 自动运行检查：图书售罄时不能上架
+        if self.stock <= 0 and self.on_sale == 'Y':
+            raise ValidationError(_('the books which are out of stock cannot be on sale'))
+
+    def __str__(self):
+        return self.title
 
 
 class Bookstore(models.Model):
-    bsname = models.CharField(max_length=255, blank=True, null=True)
-    bstel = models.CharField(max_length=8)
-    baddr = models.CharField(max_length=255, blank=True, null=True)
-    bosstel = models.CharField(max_length=13, blank=True, null=True)
-    bosspasswd = models.CharField(max_length=255, blank=True, null=True)
-    staffpasswd = models.CharField(max_length=255, blank=True, null=True)
+    bsname = models.CharField('bookstore name', primary_key=True, max_length=255)  # 书店名，不能重名
+    bstel = models.CharField('bookstore tel', max_length=8)  # 书店电话号码，非空
+    baddr = models.CharField('bookstore address', max_length=255, blank=True, null=True)  # 书店地址
+    bosstel = models.CharField('boss tel', max_length=13, blank=True, null=True)  # 店主电话
+    bosspasswd = models.CharField('boss password', max_length=255, blank=True, null=True)  # 店主密码
+    staffpasswd = models.CharField('staff password', max_length=255, blank=True, null=True)  # 员工密码
 
-    class Meta:
-        managed = False
-        db_table = 'bookstore'
+    def __str__(self):
+        return self.bsname
 
 
 class Customer(models.Model):
-    cname = models.CharField(max_length=255, blank=True, null=True)
-    ctel = models.CharField(primary_key=True, max_length=11)
-    last_active_time = models.DateTimeField()
-    password = models.CharField(max_length=255)
+    cname = models.CharField('customer name', primary_key=True, max_length=255)  # 客户名，不能重名
+    ctel = models.CharField('customer tel', max_length=11, blank=True, null=True)  # 客户电话
+    last_active_time = models.DateTimeField(blank=True, null=True)  # 最后活跃时间
+    password = models.CharField('customer password', max_length=255, default='12345678')
+    # 密码，若用户自己不设置则默认为‘12345678’
+    session = models.TextField(null=True, blank=True)  # 购物车详情
 
-    class Meta:
-        managed = False
-        db_table = 'customer'
-
-
-class DjangoAdminLog(models.Model):
-    action_time = models.DateTimeField()
-    object_id = models.TextField(blank=True, null=True)
-    object_repr = models.CharField(max_length=200)
-    action_flag = models.PositiveSmallIntegerField()
-    change_message = models.TextField()
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'django_admin_log'
-
-
-class DjangoContentType(models.Model):
-    app_label = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'django_content_type'
-        unique_together = (('app_label', 'model'),)
-
-
-class DjangoMigrations(models.Model):
-    app = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    applied = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'django_migrations'
-
-
-class DjangoSession(models.Model):
-    session_key = models.CharField(primary_key=True, max_length=40)
-    session_data = models.TextField()
-    expire_date = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'django_session'
+    def __str__(self):
+        return self.cname
 
 
 class Order(models.Model):
-    oid = models.AutoField(primary_key=True)
-    order_time = models.DateTimeField(blank=True, null=True)
-    customer_tel = models.ForeignKey(Customer, models.DO_NOTHING, db_column='customer_tel')
-    order_amount = models.FloatField()
-    order_type = models.IntegerField()
-    order_closetime = models.DateTimeField(blank=True, null=True)
-    address = models.CharField(max_length=255)
+    oid = models.AutoField(primary_key=True)  # 订单编号
+    order_time = models.DateTimeField()  # cannot be future time， 下单时间
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)  # 客户，一个客户可对应多个订单，且删除时阻止
+    address = models.CharField(max_length=255, blank=True, null=True)  # 地址
+    ctel = models.CharField('customer tel', max_length=11, blank=True, null=True)  # 联系电话
+    type = models.CharField('buy or return',
+                            max_length=1,
+                            choices=[('Y', 'buy'), ('N', 'return')],
+                            default='Y')  # 订单种类，只能取'Y'（意为购买订单） OR 'N'（意为退货订单），默认值为‘N’
+    sendtime = models.DateTimeField('Send Time', blank=True, null=True)  # 书店（购买订单）或客户（退货订单）发货时间
+    closetime = models.DateTimeField('Close Time', blank=True, null=True)  # 客户（购买订单）或书店（退货订单）收货时间
 
-    class Meta:
-        managed = False
-        db_table = 'order_'
+    def clean(self):
+        # send time must be later than order_time and not future
+        if self.sendtime:
+            if self.sendtime < self.order_time:
+                raise ValidationError(_('send time cannot be earlier than order time'))
+        # close time must be later than send time and not future
+        if self.closetime and self.sendtime:
+            if self.closetime < self.sendtime:
+                raise ValidationError(_('close time cannot be earlier than send time'))
+
+    def __str__(self):
+        return str(self.oid)
+
+    # to show the state of the order
+    def the_state_of_order(self):
+        if self.sendtime:
+            if self.closetime:
+                return 'closed'
+            else:
+                return 'goods on the way'
+        else:
+            return 'not delivered yet'
+
+    # to automatically generate the amount of money
+    def order_amount(self):
+        result = 0
+        for orde in self.orderdetail_set.all():
+            result += orde.book.price * orde.quantity
+        return result
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        # change the stock automatically when books are really returned
+        # 对于退货订单，只有真正收货时才更新库存
+        if self.type == 'N' and self.closetime is not None:
+            super().save()
+            if self.closetime:
+                for record in self.orderdetail_set.all():
+                    record.book.stock += record.quantity
+                    record.book.save()
+        else:
+            super().save()
 
 
 class Orderdetail(models.Model):
-    order = models.OneToOneField(Order, models.DO_NOTHING, primary_key=True)
-    book = models.ForeignKey(Book, models.DO_NOTHING)
-    quantity = models.IntegerField()
-    price = models.FloatField()
+    odid = models.AutoField(primary_key=True)  # 订单详情记录编号
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)  # 订单，一个订单对应多个订单详情，删除时级联操作
+    book = models.ForeignKey(Book,
+                             on_delete=models.PROTECT)  # 书，一种书对应多个订单详情，删除时阻止
+    quantity = models.PositiveIntegerField(default=0)  # 书的数量，默认值为0
+
+    def save(self, force_insert=True, force_update=False, using=None,
+             update_fields=None):
+        # change the stock automatically when orders are created
+        # because it means those books has been ordered
+        # and can not be ordered by another customer even before delivering
+        # 订单提交时就自动修改库存，因为提交就相当于预定了，哪怕还没发货也不能卖给别人了
+        # 只能插入新记录不能修改已有记录，以免重复更新库存
+        if self.order.type == 'Y':
+            delta = self.book.stock - self.quantity
+            if delta > 0:
+                self.book.stock -= self.quantity
+                self.book.save()
+            elif delta == 0:
+                self.book.stock -= self.quantity
+                self.book.on_sale = 'N'
+                # when books are out of stock, they were not sale automatically
+                self.book.save()
+            else:
+                raise ValidationError(_('the books are not enough, please choose less or other books'))
+
+        super().save()
+
+    # 不能删除记录，要取消只能再提交一个退货订单
+    def delete(self, using=None, keep_parents=False):
+        raise ValidationError(_('Sorry, you can not delete existed orders. '
+                                'If you want to cancel the order, please submit a "return" order.'
+                                'Thank you for your understanding.'))
 
     class Meta:
-        managed = False
-        db_table = 'orderdetail'
         unique_together = (('order', 'book'),)
 
 
 class Purchaseorder(models.Model):
-    poid = models.AutoField(primary_key=True)
-    porder_time = models.DateTimeField()
-    supplier = models.ForeignKey('Supplier', models.DO_NOTHING)
-    porder_amount = models.FloatField()
-    porder_type = models.IntegerField()
-    porder_closetime = models.DateTimeField(blank=True, null=True)
+    poid = models.AutoField(primary_key=True)  # 进货订单号
+    porder_time = models.DateTimeField('Order Time')  # 进货时间
+    supplier = models.ForeignKey('Supplier', on_delete=models.PROTECT)  # 供应商，一个供应商可以对应多个进货单
+    # 删除时阻止操作
 
-    class Meta:
-        managed = False
-        db_table = 'purchaseorder'
+    def __str__(self):
+        return str(self.poid)
+
+    # to automatically generate the amount of money
+    def amount(self):
+        result = 0
+        for orde in self.purchaseorderdetail_set.all():
+            result += orde.price * orde.quantity
+        return result
 
 
 class Purchaseorderdetail(models.Model):
-    porder = models.OneToOneField(Purchaseorder, models.DO_NOTHING, primary_key=True)
-    book = models.ForeignKey(Book, models.DO_NOTHING)
-    quantity = models.IntegerField()
-    price = models.FloatField()
+    podid = models.AutoField(primary_key=True)
+    purchaseorder = models.ForeignKey(Purchaseorder, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+    quantity = models.PositiveIntegerField(default=0)
+    price = models.FloatField(default=0,
+                              validators=[MinValueValidator(0, 'the price should not below zero.')])
+
+    # 进货后自动更新库存，且无法修改，只能插入
+    def save(self, force_insert=True, force_update=False, using=None,
+             update_fields=None):
+        self.book.stock += self.quantity
+        self.book.save()
+        super().save()
+
+    # 进货记录无法删除
+    def delete(self, using=None, keep_parents=False):
+        raise ValidationError(_('Sorry, you can not delete existed purchase orders. '))
 
     class Meta:
-        managed = False
-        db_table = 'purchaseorderdetail'
-
-
-class Stock(models.Model):
-    book = models.ForeignKey(Book, models.DO_NOTHING)
-    stock_quantity = models.IntegerField()
-    outprice = models.FloatField()
-
-    class Meta:
-        managed = False
-        db_table = 'stock'
-
-
-class StockNotsale(models.Model):
-    book = models.ForeignKey(Book, models.DO_NOTHING)
-    stock_quantity = models.IntegerField()
-    outprice = models.FloatField()
-
-    class Meta:
-        managed = False
-        db_table = 'stock_notsale'
+        unique_together = (('purchaseorder', 'book'),)
 
 
 class Supplier(models.Model):
     sid = models.AutoField(primary_key=True)
-    sname = models.CharField(max_length=255, blank=True, null=True)
-    stel = models.CharField(max_length=8)
-    scity = models.CharField(max_length=31, blank=True, null=True)
-    sregtime = models.DateTimeField()
+    sname = models.CharField('supplier name', max_length=255)
+    stel = models.CharField('supplier tel', max_length=8)
+    scity = models.CharField('supplier city', max_length=31, blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'supplier'
+    def __str__(self):
+        return self.sname + '_' + self.stel
+
