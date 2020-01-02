@@ -51,3 +51,4 @@ py manage.py runserver
 ![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/closetime.png)  
 11. 点击最下方save，保存，发现此时23号订单状态由“goods on the way”变为“closed”.
 12. 回到用户界面上刷新页面，订单状态也变为“closed”，流程结束。
+* B部分还没有添加进来，所以缺少物品选购界面，后续会在用户界面上添加一个返回按钮用于返回物品选购页面
