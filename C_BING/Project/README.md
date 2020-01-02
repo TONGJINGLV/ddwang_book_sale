@@ -28,5 +28,12 @@ py manage.py runserver
 * 书店店主界面： http://127.0.0.1:8000/admin/
 * Please log in with username "admin" and password "r00tpassw0rd"
 * 用户购物车界面： http://127.0.0.1:8000/client/cart/
-* Please log in with username "admin" and password "r00tpassw0rd"
+* 同时打开两个界面，开始模拟电商购物流程：
+![Alt text](/img/pages.png)
+在用户购物车界面点击结算，进入用户信息收集页面，填入用户信息（联系电话应为11位数）：
+![Alt text](/img/info.png)
+填好信息后点击submit提交，等待3秒后进入订单详情页面，可以看到此订单的编号为22：
+![Alt text](/img/order.png)
+此时从书店店主界面进入Orders，可以看到订单列表中出现22号订单：
+![Alt text](/img/orderlist.png)
 
