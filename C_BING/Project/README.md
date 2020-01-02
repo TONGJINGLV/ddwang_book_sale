@@ -30,16 +30,24 @@ py manage.py runserver
 * 用户购物车界面： http://127.0.0.1:8000/client/cart/
 * 同时打开两个界面，开始模拟电商购物流程：  
 ![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/pages.png)  
-在用户购物车界面点击结算，进入用户信息收集页面，填入用户信息（联系电话应为11位数）：  
+1. 在用户购物车界面点击结算，进入用户信息收集页面，填入用户信息（联系电话应为11位数）：  
 ![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/info.png)  
-填好信息后点击submit提交，等待3秒后进入订单详情页面，可以看到此订单的编号为22：  
+2. 填好信息后点击submit提交，等待3秒后进入订单详情页面，可以看到此订单的编号为22：  
 ![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/order.png)  
-此时从书店店主界面进入Orders，可以看到订单列表中出现22号订单：  
+3. 此时从书店店主界面进入Orders，可以看到订单列表中出现22号订单：  
 ![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/orderlist.png)  
-点击其订单编号，进入订单编辑页面，将sendtime置为当前时间【模拟商家发货】：  
+4. 点击其订单编号22，进入订单编辑页面，将sendtime置为当前时间【模拟商家发货】：  
 ![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/changeorder.png)  
-点击最下方save，保存，发现此时订单状态由“not delivered yet”变为“goods on the way”:  
+5. 点击最下方save，保存，发现此时22号订单状态由“not delivered yet”变为“goods on the way”:  
 ![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/neworderlist.png)  
-此时刷新用户订单界面，订单状态也由“not delivered yet”变为“goods on the way”:  
+6. 此时刷新用户订单界面，订单状态也由“not delivered yet”变为“goods on the way”:  
 ![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/new.png)  
-
+7. 此时用户可以选择确认收货，确认收货后，用户界面上订单状态变为“closed”，按钮选项变为“我要退货”；书店店主界面上刷新页面，该订单状态也变为“closed”.    
+8. 此时用户可以选择我要退货，选择我要退货后，用户界面上按钮选项变为“我已退款发货”；书店店主界面上刷新页面，订单列表中出现23号退款订单：  
+![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/returnorder.png)  
+9. 此时，退货的人变为用户，用户可以在用户界面选择“我已退款发货”（表明退货已经发出）；书店店主界面上刷新页面，23号退款订单状态变为“goods on the way”:  
+![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/returnorderlist.png)  
+10. 从书店店主界面点击订单编号23，进入订单编辑界面，将closetime置为当前时间【模拟商家收到退货后在系统中确认】：  
+![](https://github.com/TONGJINGLV/ddwang_book_sale/blob/master/C_BING/Project/img/closetime.png)  
+11. 点击最下方save，保存，发现此时23号订单状态由“goods on the way”变为“closed”.
+12. 回到用户界面上刷新页面，订单状态也变为“closed”，流程结束。
