@@ -19,9 +19,10 @@
                 </tr>
         </table>
     </div>
-
-    <div class="input-group col-md-3" style="margin-right:20px">
-        <input type="submit" name="add_cart" value="加入购物车">
-    </div>
-
+    <form action={% url "client:addtocart" book_id=cur_book.book_id%} method="get">
+        <div class="input-group col-md-3" style="margin-right:20px">
+            <input type="submit" name="add_cart" value="加入购物车">
+        </div>
+    </form>
 </body>
+</html>
