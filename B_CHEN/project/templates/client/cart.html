@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <script src="{% static 'script.js' %}"></script>
+    <title>Title</title>
+</head>
+<body>
+    <h2>{{ heading }}</h2>
+    <div>
+        <table>
+            <thead><th></th><th>价格</th><th>数量</th></thead>
+            {% for item in content %}
+                <tr>
+                    <td>{{ item.book.book_id }}</td>
+                    <td>{{ item.book.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% if total %}
+            <div id="total_price">总价：{{ total }}</div>
+        {% endif %}
+    </div>
+    <div>{{ buttons|safe }}</div>
+    <div>
+        {% if detail %}
+            <ul>
+                <li>订单编号：{{ detail.oid }}</li>
+                <li>订单时间：{{ detail.order_time }}</li>
+                <li>订单状态：{{ detail.the_state_of_order }}</li>
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>
