@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="zh">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <title>搜索</title>
+</head>
+    <body>
+    <br/>
+
+    {% if request.GET.q != '' %}
+        {% if results %}
+        <h2>Results</h2>
+            <div>
+        <table>
+            <thead><th></th><th>书名</th><th>作者</th><th>图书详情</th></thead>
+            {% for book in results %}
+                <tr>
+                    <td>{{ book.book_id }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td><a href="{% url 'client:book_detail' book_id=book.book_id %}">详情</a></td>
+                    <td><a href="{% url 'client:addtocart' book_id=book.book_id %}">加入购物车</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+            </div>
+        {% else %}
+        Can't find this book.
+        {% endif %}
+    {% endif %}
+    </body>
+</html>

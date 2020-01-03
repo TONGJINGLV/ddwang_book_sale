@@ -1,0 +1,49 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'login.css' %}" rel="stylesheet"/>
+    <title>home</title>
+  </head>
+  <body>
+    <div class="container">
+                <form action={% url 'client:search' %} method="get">
+                    <div class="input-group col-md-3" style="margin-right:20px">
+                    <input type="text" class="form-control"placeholder="请输入书名" name="bookname">
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search" type="submit">搜索</button>
+                        </span>
+                    </div>
+                </form>
+    </div> <!-- /container -->
+    <a href={% url "client:logout" %} class="text-success" style="margin-right:20px"><ins>登出</ins></a>
+    <a href={% url "client:cart" %} ><ins>购物车</ins></a>
+
+    <div>
+        <table>
+            <thead><th></th><th>书名</th><th>作者</th><th>图书详情</th></thead>
+            {% for book in content %}
+                <tr>
+                    <td>{{ book.book_id }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td><a href="{% url 'client:book_detail' book_id=book.book_id %}">详情</a></td>
+                    <td><a href="{% url 'client:addtocart' book_id=book.book_id %}">加入购物车</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  </body>
+</html>

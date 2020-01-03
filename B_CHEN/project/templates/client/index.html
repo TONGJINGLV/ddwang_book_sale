@@ -1,0 +1,55 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <title>首页</title>
+</head>
+<body>
+    <div class="container">
+        <form action={% url 'client:search' %} method="get">
+                <div class="input-group col-md-3" style="margin-right:20px">
+                    <input type="text" class="form-control"placeholder="请输入书名" name="bookname">
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search" type="submit">搜索</button>
+                        </span>
+                </div>
+        </form>
+        <div>
+            <a href="client/login/" class="text-success" style="margin-right:20px"><ins>登入</ins></a>
+        </div>
+        <div>
+            <a href={%  url "client:register" %} class="text-success" style="margin-right:20px"><ins>注册</ins></a>
+        </div>
+    </div> <!-- /container -->
+
+    <div>
+        <table>
+            <thead><th></th><th>书名</th><th>作者</th><th>图书详情</th></thead>
+            {% for book in content %}
+                <tr>
+                    <td>{{ book.book_id }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td><a href="{% url 'client:book_detail' book_id=book.book_id %}">详情</a></td>
+                    <td><a href="{% url 'client:addtocart' book_id=book.book_id %}">加入购物车</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    {#    以下三者的引用顺序是固定的#}
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
